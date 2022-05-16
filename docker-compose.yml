@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  api:
+    build: ./api
+    command: uvicorn app:app --host 0.0.0.0 --reload --root-path /api --proxy-headers
+    ports:
+      - 8000:8000
+    volumes:
+      - ./data:/data
+
+  client:
+    build: ./client
+    ports:
+      - 8080:80
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - api
+
+volumes:
+  caddy-data:
+  caddy-config:
