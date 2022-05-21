@@ -10,7 +10,8 @@ import { setDoc, doc, serverTimestamp } from 'firebase/firestore'
 import { db } from '../firebase.config'
 import OAuth from '../components/OAuth'
 import { ReactComponent as ArrowRightIcon } from '../assets/svg/keyboardArrowRightIcon.svg'
-import visibilityIcon from '../assets/svg/visibilityIcon.svg'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false)
@@ -64,14 +65,14 @@ function SignUp() {
     <>
       <div className='pageContainer'>
         <header>
-          <p className='pageHeader'>Welcome Back!</p>
+          <p className='pageHeader'>Добро пожаловать!</p>
         </header>
 
         <form onSubmit={onSubmit}>
           <input
             type='text'
             className='nameInput'
-            placeholder='Name'
+            placeholder='Имя'
             id='name'
             value={name}
             onChange={onChange}
@@ -89,26 +90,29 @@ function SignUp() {
             <input
               type={showPassword ? 'text' : 'password'}
               className='passwordInput'
-              placeholder='Password'
+              placeholder='Пароль'
               id='password'
               value={password}
               onChange={onChange}
             />
 
-            <img
-              src={visibilityIcon}
+            {showPassword ? 
+            <VisibilityOffIcon 
               alt='show password'
               className='showPassword'
               onClick={() => setShowPassword((prevState) => !prevState)}
             />
+            :
+            <VisibilityIcon 
+              alt='show password'
+              className='showPassword'
+              onClick={() => setShowPassword((prevState) => !prevState)}
+            />
+            }
           </div>
 
-          <Link to='/forgot-password' className='forgotPasswordLink'>
-            Forgot Password
-          </Link>
-
           <div className='signUpBar'>
-            <p className='signUpText'>Sign Up</p>
+            <p className='signUpText'>Вперед</p>
             <button className='signUpButton'>
               <ArrowRightIcon fill='#ffffff' width='34px' height='34px' />
             </button>
@@ -117,8 +121,9 @@ function SignUp() {
 
         <OAuth />
 
+        <p className="registerText">Уже есть аккаунт?</p>
         <Link to='/sign-in' className='registerLink'>
-          Sign In Instead
+          Войти
         </Link>
       </div>
     </>

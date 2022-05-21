@@ -190,12 +190,12 @@ button {
 }
 
 .nameInput {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   background: url('./assets/svg/badgeIcon.svg') #ffffff 2.5% center no-repeat;
 }
 
 .emailInput {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   background: url('./assets/svg/personIcon.svg') #ffffff 2.5% center no-repeat;
 }
 
@@ -204,16 +204,16 @@ button {
 }
 
 .passwordInput {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   background: url('./assets/svg/lockIcon.svg') #ffffff 2.5% center no-repeat;
 }
 
 .showPassword {
   cursor: pointer;
   position: absolute;
-  top: -4%;
-  right: 1%;
-  padding: 1rem;
+  top: 20%;
+  right: 15px;
+  /* padding: 1rem; */
 }
 
 .forgotPasswordLink {
@@ -221,11 +221,13 @@ button {
   color: #00cc66;
   font-weight: 600;
   text-align: right;
+  margin: 0 1rem;
 }
 
 .signInBar,
 .signUpBar {
-  margin-top: 3rem;
+  margin: 1rem 1rem 0;
+  /* margin-left: 1rem; */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -269,7 +271,7 @@ button {
 }
 
 .socialLogin {
-  margin-top: 4rem;
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -281,7 +283,7 @@ button {
   justify-content: center;
   align-items: center;
   padding: 0.75rem;
-  margin: 1.5rem;
+  margin: 0 1.5rem;
   width: 3rem;
   height: 3rem;
   background-color: #ffffff;
@@ -293,12 +295,19 @@ button {
   width: 100%;
 }
 
+.registerText {
+  margin-top: 2rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
 .registerLink {
-  margin-top: 4rem;
+  /* margin-top: 2rem; */
   color: #00cc66;
   font-weight: 600;
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 10rem;
 }
 
 @media (min-width: 1217px) {
@@ -475,7 +484,7 @@ button {
 
 .loadMore {
   cursor: pointer;
-  width: 8rem;
+  width: 12rem;
   margin: 0 auto;
   text-align: center;
   padding: 0.25rem 0.5rem;
@@ -726,12 +735,15 @@ button {
 }
 
 .formButton,
+.searchButton,
 .formInput,
+.searchInput,
 .formInputAddress,
 .formInputName,
 .formInputSmall,
 .formInputFile,
-.formButtonActive {
+.formButtonActive,
+.searchButtonActive {
   padding: 0.9rem 3rem;
   background-color: #ffffff;
   font-weight: 600;
@@ -742,7 +754,8 @@ button {
   justify-content: center;
   align-items: center;
 }
-.formButtonActive {
+.formButtonActive,
+.searchButtonActive {
   background-color: #00cc66;
   color: #ffffff;
 }
@@ -752,6 +765,7 @@ button {
 }
 
 .formInput,
+.searchInput,
 .formInputAddress,
 .formInputName,
 .formInputSmall,
@@ -823,4 +837,65 @@ button {
   margin-left: 1rem;
   font-size: 0.8rem;
   opacity: 0.75;
+}
+
+
+.searchBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  position: relative;
+  background-color: #c7c9ce;
+  border-radius: 1rem;
+  padding: 0rem 1.5rem 1rem;
+  flex-wrap: wrap;
+}
+
+.searchLabel {
+  font-weight: 600;
+  margin: 0 0 0 0.5rem;
+  display: flex;
+}
+
+.searchBlock {
+  margin: 1rem 0.25rem 0.5rem;
+  display: block;
+}
+
+.searchInputAddress,
+.searchButton,
+.searchButtonActive {
+  padding: 0.9rem 1rem;
+  width: 95%;
+  /* max-width: 500px; */
+}
+
+.searchInputSmall {
+  margin-right: 0;
+  padding: 0.9rem 0.7rem;
+  text-align: center;
+  width: 100px;
+}
+
+.tire {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  line-height: 30px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 28px;
+  width: 30px;
+  padding-top: 15px;
+}
+
+.submitButton {
+  margin-top: 1.7rem;
+  padding: 0.9rem 2rem;
+  cursor: pointer;
+}
+
+.addressBlock {
+  flex-grow: 2;
 }

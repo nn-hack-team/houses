@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
+import { MapContainer, Marker, TileLayer } from 'react-leaflet'
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper-bundle.css'
-import { getDoc, doc } from 'firebase/firestore'
-import { getAuth } from 'firebase/auth'
-import { db } from '../firebase.config'
+// import { getAuth } from 'firebase/auth'
 import Spinner from '../components/Spinner'
 import Price from '../components/Price'
 import shareIcon from '../assets/svg/shareIcon.svg'
@@ -20,7 +18,7 @@ function Listing() {
 
   const navigate = useNavigate()
   const params = useParams()
-  const auth = getAuth()
+  // const auth = getAuth()
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -134,5 +132,3 @@ function Listing() {
 }
 
 export default Listing
-
-// https://stackoverflow.com/questions/67552020/how-to-fix-error-failed-to-compile-node-modules-react-leaflet-core-esm-pat

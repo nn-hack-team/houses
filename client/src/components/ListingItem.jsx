@@ -7,8 +7,6 @@ import Price from './Price'
 
 function ListingItem({ listing, id, onEdit, onDelete }) {
 
-  listing['location'] = listing['city']
-
   return (
     <li className='categoryListing'>
       <Link
@@ -21,7 +19,7 @@ function ListingItem({ listing, id, onEdit, onDelete }) {
           className='categoryListingImg'
         />
         <div className='categoryListingDetails'>
-          <p className='categoryListingLocation'>{listing.location}</p>
+          <p className='categoryListingLocation'>{listing.city}, {listing.region}</p>
           <p className='categoryListingName'>{listing.name}</p>
 
           <p className='categoryListingPrice'>
@@ -39,6 +37,11 @@ function ListingItem({ listing, id, onEdit, onDelete }) {
               {listing.bathrooms > 1
                 ? `${listing.bathrooms} Bathrooms`
                 : '1 Bathroom'}
+            </p>
+          </div>
+          <div className="categoryListingInfoDiv">
+          <p className='categoryListingInfoText'>
+              {listing.likes > 0 && `${listing.likes} likes`}
             </p>
           </div>
         </div>

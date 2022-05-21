@@ -7,7 +7,7 @@ function Explore() {
   return (
     <div className='explore'>
       <header>
-        <p className='pageHeader'>Houses App</p>
+        <p className='pageHeader'>вМесте</p>
       </header>
 
       <main>

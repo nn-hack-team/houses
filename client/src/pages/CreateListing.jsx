@@ -6,16 +6,13 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from 'firebase/storage'
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
-import { db } from '../firebase.config'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { v4 as uuidv4 } from 'uuid'
 import Spinner from '../components/Spinner'
 
 function CreateListing() {
-  // eslint-disable-next-line
-  const [geolocationEnabled, setGeolocationEnabled] = useState(true)
+  const geolocationEnabled = true
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     type: 'rent',
@@ -25,12 +22,10 @@ function CreateListing() {
     parking: false,
     furnished: false,
     address: '',
-    offer: false,
-    regularPrice: 0,
-    discountedPrice: 0,
+    price: 0,
     images: {},
-    latitude: 0,
-    longitude: 0,
+    lat: 0,
+    lng: 0,
   })
 
   const {
@@ -41,12 +36,10 @@ function CreateListing() {
     parking,
     furnished,
     address,
-    offer,
-    regularPrice,
-    discountedPrice,
+    price,
     images,
-    latitude,
-    longitude,
+    lat,
+    lng,
   } = formData
 
   const auth = getAuth()
@@ -75,15 +68,9 @@ function CreateListing() {
 
     setLoading(true)
 
-    if (discountedPrice >= regularPrice) {
-      setLoading(false)
-      toast.error('Discounted price needs to be less than regular price')
-      return
-    }
-
     if (images.length > 6) {
       setLoading(false)
-      toast.error('Max 6 images')
+      toast.error('Максимум 6 изображений')
       return
     }
 
@@ -97,8 +84,6 @@ function CreateListing() {
 
       const data = await response.json()
 
-      console.log(data)
-
       geolocation.lat = data[0]?.lat ?? 0
       geolocation.lng = data[0]?.lon ?? 0
 
@@ -109,12 +94,12 @@ function CreateListing() {
 
       if (location === undefined || location.includes('undefined')) {
         setLoading(false)
-        toast.error('Please enter a correct address')
+        toast.error('Пожалуйста введите корректный адресс')
         return
       }
     } else {
-      geolocation.lat = latitude
-      geolocation.lng = longitude
+      geolocation.lat = lat
+      geolocation.lng = lng
     }
 
     // Store image in firebase
@@ -162,26 +147,33 @@ function CreateListing() {
       [...images].map((image) => storeImage(image))
     ).catch(() => {
       setLoading(false)
-      toast.error('Images not uploaded')
+      toast.error('Не удалось загрузить изображения')
       return
     })
 
     const formDataCopy = {
       ...formData,
       imgUrls,
-      geolocation,
-      timestamp: serverTimestamp(),
+      lat: geolocation.lat,
+      lng: geolocation.lng,
+      // timestamp: serverTimestamp(),
     }
 
-    formDataCopy.location = address
+    // formDataCopy.location = address
     delete formDataCopy.images
     delete formDataCopy.address
-    !formDataCopy.offer && delete formDataCopy.discountedPrice
+    // !formDataCopy.offer && delete formDataCopy.discountedPrice
 
-    const docRef = await addDoc(collection(db, 'listings'), formDataCopy)
+    const add_answer = await fetch('/api/houses', {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formDataCopy)
+    })
+      .then(response => response.json())
+
     setLoading(false)
     toast.success('Listing saved')
-    navigate(`/category/${formDataCopy.type}/${docRef.id}`)
+    navigate(`/category/${formDataCopy.type}/${add_answer.item_ref}`)
   }
 
   const onMutate = (e) => {
@@ -218,12 +210,12 @@ function CreateListing() {
   return (
     <div className='profile'>
       <header>
-        <p className='pageHeader'>Create a Listing</p>
+        <p className='pageHeader'>Создать объявление</p>
       </header>
 
       <main>
         <form onSubmit={onSubmit}>
-          <label className='formLabel'>Sell / Rent</label>
+          <label className='formLabel'>Продать / сдать</label>
           <div className='formButtons'>
             <button
               type='button'
@@ -232,7 +224,7 @@ function CreateListing() {
               value='sale'
               onClick={onMutate}
             >
-              Sell
+              Продать
             </button>
             <button
               type='button'
@@ -241,11 +233,11 @@ function CreateListing() {
               value='rent'
               onClick={onMutate}
             >
-              Rent
+              Сдать
             </button>
           </div>
 
-          <label className='formLabel'>Name</label>
+          <label className='formLabel'>Название</label>
           <input
             className='formInputName'
             type='text'
@@ -259,7 +251,7 @@ function CreateListing() {
 
           <div className='formRooms flex'>
             <div>
-              <label className='formLabel'>Bedrooms</label>
+              <label className='formLabel'>Спальни</label>
               <input
                 className='formInputSmall'
                 type='number'
@@ -272,7 +264,7 @@ function CreateListing() {
               />
             </div>
             <div>
-              <label className='formLabel'>Bathrooms</label>
+              <label className='formLabel'>Ванные</label>
               <input
                 className='formInputSmall'
                 type='number'
@@ -286,7 +278,7 @@ function CreateListing() {
             </div>
           </div>
 
-          <label className='formLabel'>Parking spot</label>
+          <label className='formLabel'>Парковка</label>
           <div className='formButtons'>
             <button
               className={parking ? 'formButtonActive' : 'formButton'}
@@ -297,7 +289,7 @@ function CreateListing() {
               min='1'
               max='50'
             >
-              Yes
+              Да
             </button>
             <button
               className={
@@ -308,11 +300,11 @@ function CreateListing() {
               value={false}
               onClick={onMutate}
             >
-              No
+              Нет
             </button>
           </div>
 
-          <label className='formLabel'>Furnished</label>
+          <label className='formLabel'>С мебелью</label>
           <div className='formButtons'>
             <button
               className={furnished ? 'formButtonActive' : 'formButton'}
@@ -321,7 +313,7 @@ function CreateListing() {
               value={true}
               onClick={onMutate}
             >
-              Yes
+              Да
             </button>
             <button
               className={
@@ -334,11 +326,11 @@ function CreateListing() {
               value={false}
               onClick={onMutate}
             >
-              No
+              Нет
             </button>
           </div>
 
-          <label className='formLabel'>Address</label>
+          <label className='formLabel'>Адрес</label>
           <textarea
             className='formInputAddress'
             type='text'
@@ -351,23 +343,23 @@ function CreateListing() {
           {!geolocationEnabled && (
             <div className='formLatLng flex'>
               <div>
-                <label className='formLabel'>Latitude</label>
+                <label className='formLabel'>Широта</label>
                 <input
                   className='formInputSmall'
                   type='number'
-                  id='latitude'
-                  value={latitude}
+                  id='lat'
+                  value={lat}
                   onChange={onMutate}
                   required
                 />
               </div>
               <div>
-                <label className='formLabel'>Longitude</label>
+                <label className='formLabel'>Долгота</label>
                 <input
                   className='formInputSmall'
                   type='number'
-                  id='longitude'
-                  value={longitude}
+                  id='lng'
+                  value={lng}
                   onChange={onMutate}
                   required
                 />
@@ -375,64 +367,24 @@ function CreateListing() {
             </div>
           )}
 
-          <label className='formLabel'>Offer</label>
-          <div className='formButtons'>
-            <button
-              className={offer ? 'formButtonActive' : 'formButton'}
-              type='button'
-              id='offer'
-              value={true}
-              onClick={onMutate}
-            >
-              Yes
-            </button>
-            <button
-              className={
-                !offer && offer !== null ? 'formButtonActive' : 'formButton'
-              }
-              type='button'
-              id='offer'
-              value={false}
-              onClick={onMutate}
-            >
-              No
-            </button>
-          </div>
-
-          <label className='formLabel'>Regular Price</label>
+          <label className='formLabel'>Цена</label>
           <div className='formPriceDiv'>
             <input
               className='formInputSmall'
               type='number'
-              id='regularPrice'
-              value={regularPrice}
+              id='price'
+              value={price}
               onChange={onMutate}
               min='50'
               max='750000000'
               required
             />
-            {type === 'rent' && <p className='formPriceText'>$ / Month</p>}
+              <p className='formPriceText'>руб {type === 'rent' && " / месяц"}</p>
           </div>
 
-          {offer && (
-            <>
-              <label className='formLabel'>Discounted Price</label>
-              <input
-                className='formInputSmall'
-                type='number'
-                id='discountedPrice'
-                value={discountedPrice}
-                onChange={onMutate}
-                min='50'
-                max='750000000'
-                required={offer}
-              />
-            </>
-          )}
-
-          <label className='formLabel'>Images</label>
+          <label className='formLabel'>Изображения</label>
           <p className='imagesInfo'>
-            The first image will be the cover (max 6).
+            Первое изображение будет обложкой (максимум 6)
           </p>
           <input
             className='formInputFile'
@@ -445,7 +397,7 @@ function CreateListing() {
             required
           />
           <button type='submit' className='primaryButton createListingButton'>
-            Create Listing
+            Разместить объявление
           </button>
         </form>
       </main>

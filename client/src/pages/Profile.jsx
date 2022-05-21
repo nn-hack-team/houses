@@ -4,12 +4,7 @@ import { getAuth, updateProfile } from 'firebase/auth'
 import {
   updateDoc,
   doc,
-  collection,
-  getDocs,
-  query,
-  where,
-  orderBy,
-  deleteDoc,
+  deleteDoc
 } from 'firebase/firestore'
 import { db } from '../firebase.config'
 import { useNavigate } from 'react-router-dom'
@@ -17,6 +12,7 @@ import { toast } from 'react-toastify'
 import ListingItem from '../components/ListingItem'
 import arrowRight from '../assets/svg/keyboardArrowRightIcon.svg'
 import homeIcon from '../assets/svg/homeIcon.svg'
+import { DATA_LOADING_ERROR } from '../consts'
 
 function Profile() {
   const auth = getAuth()
@@ -34,27 +30,15 @@ function Profile() {
 
   useEffect(() => {
     const fetchUserListings = async () => {
-      const listingsRef = collection(db, 'listings')
+      try {
+        const data = await fetch(`/api/houses/pagination/0/10?owner=${auth.currentUser.uid}`)
+          .then(response => response.json())
 
-      const q = query(
-        listingsRef,
-        where('userRef', '==', auth.currentUser.uid),
-        orderBy('timestamp', 'desc')
-      )
-
-      const querySnap = await getDocs(q)
-
-      let listings = []
-
-      querySnap.forEach((doc) => {
-        return listings.push({
-          id: doc.id,
-          data: doc.data(),
-        })
-      })
-
-      setListings(listings)
-      setLoading(false)
+        setListings(data)
+        setLoading(false)
+      } catch (error) {
+        toast.error(DATA_LOADING_ERROR)
+      }
     }
 
     fetchUserListings()
@@ -108,15 +92,15 @@ function Profile() {
   return (
     <div className='profile'>
       <header className='profileHeader'>
-        <p className='pageHeader'>My Profile</p>
+        <p className='pageHeader'>Профиль</p>
         <button type='button' className='logOut' onClick={onLogout}>
-          Logout
+          Выйти
         </button>
       </header>
 
       <main>
         <div className='profileDetailsHeader'>
-          <p className='profileDetailsText'>Personal Details</p>
+          <p className='profileDetailsText'>Информация</p>
           <p
             className='changePersonalDetails'
             onClick={() => {
@@ -124,7 +108,7 @@ function Profile() {
               setChangeDetails((prevState) => !prevState)
             }}
           >
-            {changeDetails ? 'done' : 'change'}
+            {changeDetails ? 'готово' : 'изменить'}
           </p>
         </div>
 
@@ -151,18 +135,18 @@ function Profile() {
 
         <Link to='/create-listing' className='createListing'>
           <img src={homeIcon} alt='home' />
-          <p>Sell or rent your home</p>
+          <p>Продать или сдать недвижимость</p>
           <img src={arrowRight} alt='arrow right' />
         </Link>
 
         {!loading && listings?.length > 0 && (
           <>
-            <p className='listingText'>Your Listings</p>
+            <p className='listingText'>Ваши объявления</p>
             <ul className='listingsList'>
               {listings.map((listing) => (
                 <ListingItem
                   key={listing.id}
-                  listing={listing.data}
+                  listing={listing}
                   id={listing.id}
                   onDelete={() => onDelete(listing.id)}
                   onEdit={() => onEdit(listing.id)}
