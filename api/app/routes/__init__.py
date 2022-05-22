@@ -11,7 +11,7 @@ def get_ai_price():
     return {"price": get_placeholder_prediction()}
 
 @app.get('/houses/pagination/{start}/{end}')
-async def get_pagination_houses(start: int, end: int, lat_start: float = None, lat_end: float = None, lng_start: float = None, lng_end: float = None, radius: float = None, start_price: float = None, end_price: float = None, category: str = None, owner: str = None):
+async def get_pagination_houses(start: int, end: int, lat_start: float = None, lat_end: float = None, lng_start: float = None, lng_end: float = None, radius: float = None, start_price: float = None, end_price: float = None, category: str = None, owner: str = None, liked_by: str = None):
     return get_data_items(
         start=start,
         end=end,
@@ -23,7 +23,8 @@ async def get_pagination_houses(start: int, end: int, lat_start: float = None, l
         start_price=start_price,
         end_price=end_price,
         category=category,
-        owner=owner
+        owner=owner,
+        liked_by=liked_by
     )
 
 @app.get('/houses/{house_id}')

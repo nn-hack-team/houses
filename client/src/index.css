@@ -515,6 +515,34 @@ button {
   align-items: center;
 }
 
+.likeIconDiv {
+  cursor: pointer;
+  position: fixed;
+  top: 3%;
+  right: 12%;
+  z-index: 2;
+  background-color: #ffffff;
+  border-radius: 1.5rem;
+  flex-wrap: wrap;
+  /* width: 4rem; */
+  height: 3rem;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 0.8rem
+}
+
+.likeIcon {
+  color: #ff1744;
+  margin: 0;
+}
+
+.likeText {
+  font-weight: 600;
+  /* font-size: 0.8rem; */
+  margin-left: 0.5rem;
+}
+
 .listingName {
   font-weight: 600;
   font-size: 1.5rem;

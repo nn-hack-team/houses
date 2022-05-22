@@ -6,9 +6,7 @@ import { DATA_LOADING_ERROR } from '../consts'
 function SearchBox({ setListings, setLoading, setLastFetchedListing, fetchMore, setFetchMore }) {
 	const geolocationEnabled = true
 	const [pagination, setPagination] = useState(0)
-
 	const [queryString, setQueryString] = useState('')
-
 	const [searchData, setSearchData] = useState({
 		address: '',
 		type: null,
@@ -32,7 +30,7 @@ function SearchBox({ setListings, setLoading, setLastFetchedListing, fetchMore, 
 		if (e.target.value === 'false') {
 		  boolean = false
 		}
-	// Text/Booleans/Numbers
+		
     	if (!e.target.files) {
 			setSearchData((prevState) => ({
 			...prevState,

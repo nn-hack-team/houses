@@ -1,5 +1,5 @@
 from app.data import read_data
-from app.tools import get_alpha_raduis, fix_items
+from app.tools import get_alpha_raduis
 
 
 def filter_by_loc_and_radius(data, lat, lng, radius):
@@ -21,7 +21,7 @@ def filter_by_price(data, start_price=None, end_price=None):
 
 
 
-def get_data_items(start=None, end=None, lat_start=None, lat_end=None, lng_start=None, lng_end=None, radius=None, start_price=None, end_price=None, category=None, owner=None):
+def get_data_items(start=None, end=None, lat_start=None, lat_end=None, lng_start=None, lng_end=None, radius=None, start_price=None, end_price=None, category=None, owner=None, liked_by=None):
     data = read_data()
 
     if None not in [lat_start, lng_start, radius]:
@@ -37,11 +37,14 @@ def get_data_items(start=None, end=None, lat_start=None, lat_end=None, lng_start
 
     if owner is not None:
         data = data[data.userRef == owner].copy()
+
+    if liked_by is not None:
+        data = data[data.likedBy.astype(str).str.contains(liked_by)].copy()
     
     if None not in [start, end]:
         data = data.iloc[start:end].copy()
 
-    return fix_items(data.to_dict('records'))
+    return data.to_dict('records')
 
 def get_by_id(id):
     return get_data_items(start=id, end=id+1)[0]

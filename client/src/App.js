@@ -14,13 +14,16 @@ import CreateListing from './pages/CreateListing'
 import EditListing from './pages/EditListing'
 import Listing from './pages/Listing'
 import Contact from './pages/Contact'
+import PrivateExploreRoute from './components/PrivateExploreRoute'
 
 function App() {
   return (
     <>
       <Router>
         <Routes>
-          <Route path='/' element={<Explore />} />
+          <Route path="/" element={<PrivateExploreRoute />}>
+            <Route path='/' element={<Explore />} />
+          </Route>
           <Route path='/offers' element={<Offers />} />
           <Route path='/category/:categoryName' element={<Category />} />
           <Route path='/profile' element={<PrivateRoute />}>

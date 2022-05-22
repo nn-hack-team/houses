@@ -31,7 +31,7 @@ function Category() {
     }
 
     fetchListings()
-  }, [params.categoryName, pagination])
+  }, [])
 
   // Pagination / Load More
   const onFetchMoreListings = async () => {

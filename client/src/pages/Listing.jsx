@@ -5,10 +5,12 @@ import { MapContainer, Marker, TileLayer } from 'react-leaflet'
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper-bundle.css'
-// import { getAuth } from 'firebase/auth'
+import { getAuth } from 'firebase/auth'
 import Spinner from '../components/Spinner'
 import Price from '../components/Price'
 import shareIcon from '../assets/svg/shareIcon.svg'
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y])
 
 function Listing() {
@@ -18,22 +20,37 @@ function Listing() {
 
   const navigate = useNavigate()
   const params = useParams()
-  // const auth = getAuth()
+  const auth = getAuth()
+
+  const [liked, setLiked] = useState(false)
+
+
+  const fetchListing = async () => {
+    const data = await fetch(`/api/houses/${params.listingId}`)
+      .then(response => response.json())
+
+    setListing(data)
+    setLiked(data.likedBy.includes(auth.currentUser?.uid))
+    setLoading(false)
+  }
 
   useEffect(() => {
-    const fetchListing = async () => {
-      const data = await fetch(`/api/houses/${params.listingId}`)
-        .then(response => response.json())
-
-      setListing(data)
-      setLoading(false)
-    }
-
     fetchListing()
   }, [navigate, params.listingId])
 
   if (loading) {
     return <Spinner />
+  }
+
+  const onLike = async (e) => {
+    if (!!auth.currentUser?.uid) {
+      setLiked(!liked)
+      const ans = await fetch(`/api/like/${liked ? 'remove' : 'add'}/${params.listingId}/${auth.currentUser?.uid}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" }
+      })
+    fetchListing()
+    }
   }
 
   return (
@@ -67,6 +84,15 @@ function Listing() {
       >
         <img src={shareIcon} alt='' />
       </div>
+      {auth.currentUser?.uid && (
+        <div
+          className='likeIconDiv'
+          onClick={onLike}
+        >
+          {liked ? <FavoriteIcon className={'likeIcon'}/> : <FavoriteBorderIcon />}
+          {listing.likes > 0 && <span className={'likeText'}>{listing.likes}</span>}
+        </div>
+      )}
 
       {shareLinkCopied && <p className='linkCopied'>Link Copied!</p>}
 
