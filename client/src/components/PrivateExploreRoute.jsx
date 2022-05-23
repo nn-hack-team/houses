@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { useAuthStatus } from '../hooks/useAuthStatus'
 import SimpleExplore from '../pages/Simple Explore'
 import Spinner from './Spinner'
@@ -10,7 +10,7 @@ const PrivateExploreRoute = () => {
     return <Spinner />
   }
 
-  return loggedIn ? <Outlet /> : <SimpleExplore />//<Navigate to='/sign-in' />
+  return loggedIn ? <Outlet /> : <SimpleExplore />
 }
 
 export default PrivateExploreRoute

@@ -1,4 +1,3 @@
-import pandas as pd 
 import random
 
 from app.data import read_data
@@ -20,6 +19,14 @@ def add_item(item):
     data.to_csv('/data/tables/n1000.csv', index=False)
 
     return new_item.id
+
+def remove_item(house_id):
+    
+        data = read_data()
+    
+        data.drop(int(house_id), inplace=True)
+    
+        data.to_csv('/data/tables/n1000.csv', index=False)
 
 def add_like(house_id, user_id):
 

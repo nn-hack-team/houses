@@ -19,7 +19,7 @@ function ListingItem({ listing, id, onEdit, onDelete }) {
           className='categoryListingImg'
         />
         <div className='categoryListingDetails'>
-          <p className='categoryListingLocation'>{listing.city}, {listing.region}</p>
+          <p className='categoryListingLocation'>{listing.address}</p>
           <p className='categoryListingName'>{listing.name}</p>
 
           <p className='categoryListingPrice'>

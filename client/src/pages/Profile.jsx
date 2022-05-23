@@ -78,7 +78,12 @@ function Profile() {
 
   const onDelete = async (listingId) => {
     if (window.confirm('Are you sure you want to delete?')) {
-      await deleteDoc(doc(db, 'listings', listingId))
+
+      await fetch(`/api/houses/${listingId}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" }
+      })
+
       const updatedListings = listings.filter(
         (listing) => listing.id !== listingId
       )
@@ -149,7 +154,7 @@ function Profile() {
                   listing={listing}
                   id={listing.id}
                   onDelete={() => onDelete(listing.id)}
-                  onEdit={() => onEdit(listing.id)}
+                  // onEdit={() => onEdit(listing.id)}
                 />
               ))}
             </ul>

@@ -3,7 +3,7 @@ version: '3.8'
 services:
   api:
     build: ./api
-    command: uvicorn app:app --host 0.0.0.0 --reload --root-path /api --proxy-headers
+    command: uvicorn app:app --host 0.0.0.0 --reload --proxy-headers
     ports:
       - 8000:8000
     volumes:

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
-import { MapContainer, Marker, TileLayer } from 'react-leaflet'
+import { useNavigate, useParams, Link } from 'react-router-dom'
+import { MapContainer, Marker, TileLayer, Popup } from 'react-leaflet'
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper-bundle.css'
@@ -53,11 +52,10 @@ function Listing() {
     }
   }
 
+  console.log(listing)
+
   return (
     <main>
-      <Helmet>
-        <title>{listing.name}</title>
-      </Helmet>
       <Swiper slidesPerView={1} pagination={{ clickable: true }}>
         {listing.imgUrls.map((url, index) => (
           <SwiperSlide key={index}>
@@ -79,7 +77,7 @@ function Listing() {
           setShareLinkCopied(true)
           setTimeout(() => {
             setShareLinkCopied(false)
-          }, 2000)
+          }, 3000)
         }}
       >
         <img src={shareIcon} alt='' />
@@ -118,8 +116,11 @@ function Listing() {
               ? `${listing.bathrooms} Ванные`
               : '1 Ванная'}
           </li>
-          {/* <li>{listing.parking && 'Parking Spot'}</li>
-          <li>{listing.furnished && 'Furnished'}</li> */}
+          <li>{parseInt(listing.floor)} этаж</li>
+          <li>{listing.parking && 'Есть парковочное место'}</li>
+          <li>{listing.furnished && 'С мебелью'}</li>
+          {listing.subway_dist < 5 && <li>До метро ~ {parseInt(listing.subway_dist * 10) / 10} км</li> }
+          
         </ul>
 
         <p className='listingLocationTitle'>Расположение</p>
@@ -139,19 +140,20 @@ function Listing() {
             <Marker
               position={[listing.lat, listing.lng]}
             >
-              {/* <Popup>{listing.location}</Popup> */}
+              <Popup>{listing.address}</Popup>
             </Marker>
           </MapContainer>
         </div>
 
-        {/* {auth.currentUser?.uid !== listing.userRef && (
+        {listing.userRef !== 'none' && // auth.currentUser?.uid !== listing.owner && 
+        (
           <Link
             to={`/contact/${listing.userRef}?listingName=${listing.name}`}
             className='primaryButton'
           >
             Contact Landlord
           </Link>
-        )} */}
+        )}
       </div>
     </main>
   )

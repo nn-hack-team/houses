@@ -21,11 +21,13 @@ function CreateListing() {
     bathrooms: 1,
     parking: false,
     furnished: false,
+    floor: 1,
     address: '',
     price: 0,
     images: {},
     lat: 0,
     lng: 0,
+    total_square: 50
   })
 
   const {
@@ -35,11 +37,13 @@ function CreateListing() {
     bathrooms,
     parking,
     furnished,
+    floor,
     address,
     price,
     images,
     lat,
     lng,
+    total_square
   } = formData
 
   const auth = getAuth()
@@ -161,7 +165,7 @@ function CreateListing() {
 
     // formDataCopy.location = address
     delete formDataCopy.images
-    delete formDataCopy.address
+    // delete formDataCopy.address
     // !formDataCopy.offer && delete formDataCopy.discountedPrice
 
     const add_answer = await fetch('/api/houses', {
@@ -244,8 +248,8 @@ function CreateListing() {
             id='name'
             value={name}
             onChange={onMutate}
-            maxLength='32'
-            minLength='10'
+            maxLength='64'
+            minLength='4'
             required
           />
 
@@ -258,7 +262,7 @@ function CreateListing() {
                 id='bedrooms'
                 value={bedrooms}
                 onChange={onMutate}
-                min='1'
+                min='0'
                 max='50'
                 required
               />
@@ -271,7 +275,20 @@ function CreateListing() {
                 id='bathrooms'
                 value={bathrooms}
                 onChange={onMutate}
-                min='1'
+                min='0'
+                max='50'
+                required
+              />
+            </div>
+            <div>
+              <label className='formLabel'>Этаж</label>
+              <input
+                className='formInputSmall'
+                type='number'
+                id='floor'
+                value={floor}
+                onChange={onMutate}
+                min='-5'
                 max='50'
                 required
               />
@@ -380,6 +397,21 @@ function CreateListing() {
               required
             />
               <p className='formPriceText'>руб {type === 'rent' && " / месяц"}</p>
+          </div>
+
+          <label className='formLabel'>Площадь</label>
+          <div className='formPriceDiv'>
+            <input
+              className='formInputSmall'
+              type='number'
+              id='total_square'
+              value={total_square}
+              onChange={onMutate}
+              min='1'
+              max='10000000'
+              required
+            />
+              <p className='formPriceText'>метров квадратных</p>
           </div>
 
           <label className='formLabel'>Изображения</label>
